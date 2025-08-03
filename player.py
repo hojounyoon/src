@@ -1,5 +1,6 @@
 from config import BOARD_SIZE, categories, image_size
 from tensorflow.keras import models
+from tensorflow.keras.models import load_model
 import numpy as np
 import tensorflow as tf
 
@@ -107,8 +108,24 @@ class UserWebcamPlayer:
         # The classification value should be 0, 1, or 2 for neutral, happy or surprise respectively
 
         # return an integer (0, 1 or 2), otherwise the code will throw an error
-        return 1
-        pass
+        # 1. Load the trained model only once
+        if not hasattr(self, 'model'):
+            self.model = load_model('results/basic_model_1_epochs_timestamp_1754205925.keras')
+
+        # 2. Resize image to match model input size
+        resized_img = cv2.resize(img, image_size)
+
+        # 3. Normalize and expand dimensions to fit model input
+        normalized_img = resized_img / 255.0
+        input_img = np.expand_dims(normalized_img, axis=-1)
+        input_img = np.repeat(input_img, 3, axis=-1)
+        input_img = np.expand_dims(input_img, axis=0)
+
+        # 4. Predict
+        predictions = self.model.predict(input_img)
+        emotion = np.argmax(predictions[0])
+                    
+        return int(emotion)
     
     def get_move(self, board_state):
         row, col = None, None

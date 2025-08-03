@@ -18,7 +18,7 @@ class Model:
     def train_model(self, train_dataset, validation_dataset, epochs):
         history = self.model.fit(
             x=train_dataset,
-            epochs=5,
+            epochs=10,
             verbose="auto",
             validation_data=validation_dataset
         )
