@@ -7,21 +7,14 @@ class BasicModel(Model):
     def _define_model(self, input_shape, categories_count):
         # Your code goes here
         # you have to initialize self.model to a keras model
-        self.model = Sequential([
-            layers.Rescaling(1./255, input_shape=input_shape),
-            layers.Conv2D(32, (3, 3), activation='relu'),
-            layers.MaxPooling2D(),
-            layers.Conv2D(64, (3, 3), activation='relu'),
-            layers.MaxPooling2D(),
-            layers.Flatten(),
-            layers.Dense(128, activation='relu'),
-            layers.Dropout(0.5),
-            layers.Dense(categories_count, activation='softmax')
-        ])
+        self.model = Sequential()
+        self.model.add(layers.Input(shape=input_shape))
+        self.model.add(layers.Conv2D(filters = 32, kernel_size = (3, 3), activation='relu'))
+        self.model.add(layers.MaxPooling2D(pool_size = (2, 2)))
+        self.model.add(layers.Flatten())
+        self.model.add(layers.Dense(units = categories_count, activation='softmax'))
     
     def _compile_model(self):
-        # Your code goes here
-        # you have to compile the keras model, similar to the example in the writeup
         self.model.compile(
             optimizer=RMSprop(learning_rate=0.001),
             loss='categorical_crossentropy',
