@@ -123,8 +123,11 @@ class UserWebcamPlayer:
 
         # 4. Predict
         predictions = self.model.predict(input_img)
-        emotion = np.argmax(predictions[0])
-                    
+        print('Predictions:', predictions)
+        emotion = np.argmax(predictions)
+
+
+        print('Predicted emotion:', categories[emotion])
         return int(emotion)
     
     def get_move(self, board_state):
